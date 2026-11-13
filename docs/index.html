@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autoresponder Export</title>
+<meta name="description" content="Download all your GetResponse autoresponders as JSON, CSV, HTML, TXT and ZIP.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">GetResponse Autoresponder Export</a>
+  <nav>
+    <a href="index.html" aria-current="page">Overview</a>
+    <a href="usage.html">How to use</a>
+    <a href="fluentcrm.html">FluentCRM</a>
+    <a href="https://github.com/bignall/getresponse-autoresponder-export">GitHub</a>
+  </nav>
+</div></header>
+<main><div class="wrap">
+
+<h1>Get your autoresponders out of GetResponse</h1>
+<p class="lead">One small Python script downloads every follow-up email in your GetResponse account, with subject lines, content, send days and list order, in formats you can read, edit or import elsewhere.</p>
+<p>
+  <a class="button" href="https://raw.githubusercontent.com/bignall/getresponse-autoresponder-export/main/export_autoresponders.py" download>Download the script</a>
+  <a class="button secondary" href="usage.html">How to use it</a>
+</p>
+
+<h2>What you get</h2>
+<div class="cards">
+  <div class="card"><h3>autoresponders.json</h3><p>Everything, including each list's send order and the days between emails. Use it for imports.</p></div>
+  <div class="card"><h3>autoresponders.csv</h3><p>A spreadsheet of names, subjects, days and content. Opens in Excel or Google Sheets.</p></div>
+  <div class="card"><h3>html/</h3><p>One HTML file per email, plus an <code>index.html</code> to browse and preview them.</p></div>
+  <div class="card"><h3>txt/</h3><p>The plain-text version of each email, with its subject line on top.</p></div>
+  <div class="card"><h3>autoresponders_content.zip</h3><p>The HTML and TXT folders in one archive, for backups or sharing.</p></div>
+</div>
+
+<h2>Why use it</h2>
+<ul>
+  <li><strong>A backup</strong> of emails you may have spent years writing.</li>
+  <li><strong>A move to another platform.</strong> The JSON keeps each list's sequence order, ready for an importer. See <a href="fluentcrm.html">moving to FluentCRM</a>.</li>
+  <li><strong>A review.</strong> Read the whole sequence in one spreadsheet instead of clicking through each email.</li>
+</ul>
+
+<h2>Requirements</h2>
+<ul>
+  <li>Python 3.9 or newer. Nothing else to install.</li>
+  <li>A GetResponse plan with API access, and an API key.</li>
+</ul>
+
+<div class="note"><strong>Your exports are private.</strong> They contain your email content. Keep your API key out of shared files, and don't commit your <code>exports/</code> folder to a public repository.</div>
+</div></main>
+<footer><div class="wrap">Public domain (The Unlicense). Not affiliated with GetResponse or FluentCRM.</div></footer>
+</body>
+</html>

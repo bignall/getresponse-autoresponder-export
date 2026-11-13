@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moving to FluentCRM</title>
+<meta name="description" content="How to bring GetResponse autoresponders into FluentCRM as email sequences.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">GetResponse Autoresponder Export</a>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="usage.html">How to use</a>
+    <a href="fluentcrm.html" aria-current="page">FluentCRM</a>
+    <a href="https://github.com/bignall/getresponse-autoresponder-export">GitHub</a>
+  </nav>
+</div></header>
+<main><div class="wrap">
+
+<h1>Moving to FluentCRM</h1>
+<p class="lead">FluentCRM has no screen for importing emails, so the export is built to feed an importer that rebuilds each GetResponse list as a FluentCRM email sequence.</p>
+
+<h2>How the two map</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>GetResponse</th><th>FluentCRM</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>List (API: "campaign")</td><td>Email Sequence</td><td>One sequence per list</td></tr>
+<tr><td>Autoresponder</td><td>Sequence email</td><td>Kept in send order</td></tr>
+<tr><td><code>subject</code></td><td>Email subject</td><td></td></tr>
+<tr><td><code>html</code></td><td>Email body (raw HTML)</td><td>Merge tags need converting, see below</td></tr>
+<tr><td><code>dayOfCycle</code></td><td>Delay</td><td>The export includes both days since signup (<code>dayOfCycle</code>) and days since the previous email (<code>delayDaysFromPrevious</code>), whichever the sequence setting needs</td></tr>
+<tr><td>Sending time, excluded weekdays</td><td>Sequence email timing</td><td>Copied by hand where FluentCRM supports it</td></tr>
+<tr><td>Subscribers</td><td>Contacts</td><td>Use FluentCRM's own CSV contact import</td></tr>
+</tbody></table></div>
+
+<h2>Merge tags</h2>
+<p>Personalisation tags differ between the two systems and must be converted, or subscribers will see the raw tag:</p>
+<div class="table-scroll"><table>
+<thead><tr><th>GetResponse</th><th>FluentCRM</th></tr></thead>
+<tbody>
+<tr><td><code>[[firstname]]</code></td><td><code>{{contact.first_name}}</code></td></tr>
+<tr><td><code>[[lastname]]</code></td><td><code>{{contact.last_name}}</code></td></tr>
+<tr><td><code>[[name]]</code></td><td><code>{{contact.full_name}}</code></td></tr>
+<tr><td><code>[[email]]</code></td><td><code>{{contact.email}}</code></td></tr>
+<tr><td>Unsubscribe link</td><td><code>##crm.unsubscribe_url##</code></td></tr>
+</tbody></table></div>
+<p>Check these against your own emails and FluentCRM's smart-code list in the editor. GetResponse custom fields need matching FluentCRM custom fields.</p>
+
+<h2>The importer (planned)</h2>
+<p>The importer will be a separate project that reads <code>autoresponders.json</code> and talks to FluentCRM's REST API on your WordPress site. It will:</p>
+<ol class="steps">
+  <li>Run in <strong>dry-run mode</strong> by default and show what it would create.</li>
+  <li>Create one email sequence per GetResponse list, skipping any that already exist.</li>
+  <li>Add each email with its subject, HTML body and delay, with merge tags converted.</li>
+  <li>Leave everything as a <strong>draft</strong> so you can review it before anyone receives it.</li>
+  <li>List anything it could not convert automatically.</li>
+</ol>
+<div class="note"><strong>Before it can be built:</strong> email sequences are a <strong>FluentCRM Pro</strong> feature, and their API needs checking on a live site. The free plugin's source code has no email-sequence endpoints. You will need FluentCRM Pro and a WordPress Application Password for an administrator account.</div>
+
+<h2>Manual route (works today)</h2>
+<p>For a handful of emails, copying by hand is quick:</p>
+<ol class="steps">
+  <li>Open <code>autoresponders.csv</code> to see each list's emails in order with their days.</li>
+  <li>In WordPress, go to <strong>FluentCRM → Email Sequences → Create New Sequence</strong>.</li>
+  <li>For each email, add a sequence email, choose the <strong>Raw HTML</strong> editor, and paste the contents of the matching file in <code>html/</code>.</li>
+  <li>Copy the subject line, and set the delay from <code>dayOfCycle</code> or <code>delayDaysFromPrevious</code>, whichever the delay field measures.</li>
+  <li>Replace merge tags using the table above, and send yourself a test.</li>
+</ol>
+</div></main>
+<footer><div class="wrap">Public domain (The Unlicense). Not affiliated with GetResponse or FluentCRM.</div></footer>
+</body>
+</html>

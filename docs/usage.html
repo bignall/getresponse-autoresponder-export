@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Use</title>
+<meta name="description" content="Step-by-step instructions for exporting GetResponse autoresponders.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">GetResponse Autoresponder Export</a>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="usage.html" aria-current="page">How to use</a>
+    <a href="fluentcrm.html">FluentCRM</a>
+    <a href="https://github.com/bignall/getresponse-autoresponder-export">GitHub</a>
+  </nav>
+</div></header>
+<main><div class="wrap">
+
+<h1>How to use it</h1>
+<p class="lead">About five minutes from start to finished export.</p>
+
+<h2>1. Get your API key</h2>
+<ol class="steps">
+  <li>Log in to GetResponse.</li>
+  <li>Open <strong>Menu → Integrations and API → API</strong>.</li>
+  <li>Click <strong>Generate API key</strong>, give it a name, and copy the key.</li>
+</ol>
+<p>Treat the key like a password: anyone who has it can read your account.</p>
+
+<h2>2. Get the script</h2>
+<p>Download <a href="https://raw.githubusercontent.com/bignall/getresponse-autoresponder-export/main/export_autoresponders.py" download><code>export_autoresponders.py</code></a> into a folder of its own, or clone the repository:</p>
+<pre><code>git clone https://github.com/bignall/getresponse-autoresponder-export.git
+cd getresponse-autoresponder-export</code></pre>
+<p>Check Python is installed with <code>python3 --version</code> (on Windows, <code>py --version</code>). If it isn't, install it from <a href="https://www.python.org/downloads/">python.org</a>.</p>
+
+<h2>3. Give the script your key</h2>
+<p>Pick one:</p>
+<h3>A .env file (easiest to reuse)</h3>
+<p>Create a file called <code>.env</code> in the same folder, containing:</p>
+<pre><code>GETRESPONSE_API_KEY=paste-your-key-here</code></pre>
+<h3>An environment variable</h3>
+<pre><code># macOS / Linux
+export GETRESPONSE_API_KEY=paste-your-key-here
+
+# Windows PowerShell
+$env:GETRESPONSE_API_KEY = "paste-your-key-here"</code></pre>
+
+<h2>4. Run it</h2>
+<pre><code>python3 export_autoresponders.py</code></pre>
+<p>On Windows use <code>py export_autoresponders.py</code>. You'll see something like:</p>
+<pre><code>Fetching autoresponders from GetResponse...
+Exported 24 autoresponders from 3 list(s) to /home/you/exports/2026-11-13_142210
+  - autoresponders.json
+  - autoresponders.csv
+  - html/index.html
+  - txt
+  - autoresponders_content.zip</code></pre>
+<p>Open <code>html/index.html</code> in your browser to look through the emails.</p>
+
+<h2>Options</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Option</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>-o DIR</code></td><td>Save to <code>DIR</code> instead of <code>exports/&lt;date-time&gt;</code></td></tr>
+<tr><td><code>-f json,csv</code></td><td>Only some outputs. Choices: <code>json</code>, <code>csv</code>, <code>html</code>, <code>txt</code>, <code>zip</code></td></tr>
+<tr><td><code>--campaign-id ID</code></td><td>Only one list. GetResponse calls lists "campaigns" in its API.</td></tr>
+<tr><td><code>--status enabled</code></td><td>Only enabled (or <code>disabled</code>) autoresponders</td></tr>
+<tr><td><code>--max us --domain example.com</code></td><td>For GetResponse MAX accounts (<code>us</code> or <code>pl</code>)</td></tr>
+<tr><td><code>--include-raw</code></td><td>Also keep the untouched API data in the JSON</td></tr>
+<tr><td><code>--csv-no-body</code></td><td>Leave email content out of the CSV for a lighter spreadsheet</td></tr>
+<tr><td><code>-v</code></td><td>Show progress for each email</td></tr>
+</tbody></table></div>
+
+<h2>The JSON format</h2>
+<p>The JSON has two parts. <code>autoresponders</code> lists every email with its fields. <code>sequences</code> groups them by list in send order:</p>
+<pre><code>{
+  "exportedOn": "2026-11-13T14:22:10+00:00",
+  "count": 3,
+  "sequences": [
+    {
+      "campaignId": "abc12",
+      "campaignName": "newsletter_signups",
+      "emails": [
+        { "position": 1, "id": "Xy1", "dayOfCycle": 0, "delayDaysFromPrevious": 0 },
+        { "position": 2, "id": "Xy2", "dayOfCycle": 2, "delayDaysFromPrevious": 2 },
+        { "position": 3, "id": "Xy3", "dayOfCycle": 7, "delayDaysFromPrevious": 5 }
+      ]
+    }
+  ],
+  "autoresponders": [
+    {
+      "id": "Xy1", "name": "Welcome", "subject": "Welcome aboard!",
+      "status": "enabled", "campaignId": "abc12", "campaignName": "newsletter_signups",
+      "triggerType": "onday", "dayOfCycle": 0, "sendSettings": { "type": "signup" },
+      "fromEmail": "you@example.com", "fromName": "You", "replyToEmail": "",
+      "editor": "getresponse", "createdOn": "2023-01-05T10:00:00+0000",
+      "html": "&lt;html&gt;...", "plainText": "..."
+    }
+  ]
+}</code></pre>
+
+<h2>Troubleshooting</h2>
+<dl>
+  <dt><strong>HTTP 401</strong></dt>
+  <dd>The key is wrong or was deleted. Generate a new one. On GetResponse MAX, also pass <code>--max</code> and <code>--domain</code>.</dd>
+  <dt><strong>HTTP 403</strong></dt>
+  <dd>Your plan may not include API access, or the key lacks permission.</dd>
+  <dt><strong>HTTP 429 / slow progress</strong></dt>
+  <dd>GetResponse limits how fast the API can be called. The script waits and retries automatically.</dd>
+  <dt><strong>"No autoresponders found"</strong></dt>
+  <dd>Check the account has time-based autoresponders. Action-based autoresponders were moved to Marketing Automation workflows, which this API endpoint does not include.</dd>
+  <dt><strong>Accents look wrong in Excel</strong></dt>
+  <dd>The CSV is UTF-8 with a byte-order mark, which recent Excel versions read correctly. Otherwise use <strong>Data → From Text/CSV</strong> and choose UTF-8.</dd>
+</dl>
+</div></main>
+<footer><div class="wrap">Public domain (The Unlicense). Not affiliated with GetResponse or FluentCRM.</div></footer>
+</body>
+</html>
