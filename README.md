@@ -60,7 +60,7 @@ Run `python3 export_autoresponders.py --help` for the full list.
 
 ## Moving to FluentCRM
 
-FluentCRM has no import screen for emails. The JSON export is designed to feed an importer that rebuilds each list as a FluentCRM email sequence. See the [FluentCRM page](https://bignall.github.io/getresponse-autoresponder-export/fluentcrm.html) for the plan and a manual workaround.
+FluentCRM has no import screen for emails. Use the companion [FluentCRM Sequence Import](https://github.com/bignall/fluentcrm-sequence-import) script to turn `autoresponders.json` into FluentCRM Pro email sequences. See also the [FluentCRM page](https://bignall.github.io/getresponse-autoresponder-export/fluentcrm.html).
 
 ## Privacy
 
